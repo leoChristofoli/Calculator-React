@@ -28,11 +28,28 @@ export default class Calculator extends Component{
     }
 
     setOperation(op){
-        console.log(op)
+        if(this.state.current === 0){
+            this.setState({ operation: op, current: 1, clearDisplay: true})
+
+        } else{
+            const isEquals = op === '='
+            const currentOperation = this.state.operation
+            const values = [...this.state.values]
+            values[0] = eval(`${values[0]} ${currentOperation} ${values[1]}`)
+            values[1] = 0
+
+            this.setState({
+                displayValue: values[0],
+                operation: isEquals ? null : op,
+                current: isEquals ? 0 : 1,
+                clearDisplay: !isEquals,
+                values
+            })
+        }
     }
 
     addDigit(n){
-        if(n == '.' && this.state.displayValue.includes('.')){
+        if(n === '.' && this.state.displayValue.includes('.')){
             return
         }
 
